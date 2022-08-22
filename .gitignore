@@ -3,6 +3,9 @@
 
 # Tech Folders
 */.vs/
+*/x64/
+*/Debug/
+*/Release/
 */*/x64/
 */*/Debug/
 */*/Release/
@@ -12,6 +15,10 @@
 *.filters
 *.user
 *.vcxproj
+*/*.vcxproj
+
+# Logs etc.
+*.txt
 
 # Compiled Object files
 *.slo
