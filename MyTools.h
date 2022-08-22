@@ -49,17 +49,23 @@ namespace MyTools {
 
     void SetColor(ConsoleColor color);
 	//=============================================================================================
+    class FileLoggerSingletone {
+    public:
+        static FileLoggerSingletone& getInstance();
+	    void __fastcall OpenLogFile(const std::string& FN);
 
-	void __fastcall OpenLogFile(const std::string& FN);
+	    void CloseLogFile();
 
-	void CloseLogFile();
+	    void __fastcall WriteToLog(const std::string& str);
 
-	void __fastcall WriteToLog(const std::string& str);
+	    void __fastcall WriteToLog(const std::string& str, int n);
 
-	void __fastcall WriteToLog(const std::string& str, int n);
-
-	void __fastcall WriteToLog(const std::string& str, double d);
-
+	    void __fastcall WriteToLog(const std::string& str, double d);
+    private:
+        FileLoggerSingletone() {};
+        FileLoggerSingletone(const FileLoggerSingletone& root) = delete;
+        FileLoggerSingletone& operator=(const FileLoggerSingletone&) = delete;
+    };
 	//=============================================================================================
 
 };
