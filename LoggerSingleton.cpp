@@ -21,20 +21,18 @@ void LoggerSingleton::CloseLogFile()
 
 void __fastcall LoggerSingleton::WriteToLog(const std::string& str)
 {
-    FileLoggerSingletone::getInstance().WriteToLog(std::to_string(counter) +" : " + str);
+    FileLoggerSingletone::getInstance().WriteToLog(std::to_string(counter++) +" : " + str);
 }
 
 void __fastcall LoggerSingleton::WriteToLog(const std::string& str, int n)
 {
 
-        FileLoggerSingletone::getInstance().WriteToLog(std::to_string(counter) + " : " + str,n);
+        FileLoggerSingletone::getInstance().WriteToLog(std::to_string(counter++) + " : " + str,n);
 }
 
 void __fastcall LoggerSingleton::WriteToLog(const std::string& str, double d)
 {
-
-    {
-        FileLoggerSingletone::getInstance().WriteToLog(std::to_string(counter) + " : " + str, d);
+        FileLoggerSingletone::getInstance().WriteToLog(std::to_string(counter++) + " : " + str, d);
 }
 
 //=============================================================================================
