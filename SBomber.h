@@ -9,7 +9,7 @@
 #include "Tank.h"
 #include "ICommand.h"
 
-class DropBomb :ICommand
+class DropBomb :public ICommand
 {
     const Plane* pPlane;
     std::vector<DynamicObject*>* vecDynamicObj;
@@ -19,7 +19,7 @@ public:
     DropBomb(const Plane* pPlane, std::vector<DynamicObject*>* vecDynamicObj, uint16_t* Bombs, int16_t* score) :pPlane(pPlane), vecDynamicObj(vecDynamicObj), Bombs(Bombs),score(score) {};
     void Execute();
 };
-class DeleteDynamicObj :ICommand 
+class DeleteDynamicObj : public ICommand 
 {
     DynamicObject* pObj;
     std::vector<DynamicObject*>* vecDynamicObj;
@@ -27,7 +27,7 @@ public:
     __fastcall DeleteDynamicObj(DynamicObject* pObj,std::vector<DynamicObject*>* vecDynamicObj) :pObj(pObj),vecDynamicObj(vecDynamicObj) {};
     void Execute(); 
 };
-class DeleteStaticObj :ICommand 
+class DeleteStaticObj :public ICommand 
 { 
     GameObject* pObj;
     std::vector<GameObject*>* vecStaticObj;
@@ -68,6 +68,7 @@ private:
     std::vector<DestroyableGroundObject*> FindDestoyableGroundObjects() const;
     std::vector<Bomb*> FindAllBombs() const;
 
+    void CommandExecuter(ICommand* pCommand);
     //ICommand * DropBomb = new DropBomb(FindPlane(),&vecDynamicObj,&bombsNumber,&score);
 
     std::vector<DynamicObject*> vecDynamicObj;

@@ -132,8 +132,7 @@ void SBomber::CheckBombsAndGround()
         {
             pGround->AddCrater(vecBombs[i]->GetX());
             CheckDestoyableObjects(vecBombs[i]);
-            DeleteDynamicObj DDO (vecBombs[i],&vecDynamicObj);
-            DDO.Execute();
+            CommandExecuter(new DeleteDynamicObj(vecBombs[i], &vecDynamicObj));
             
         }
     }
@@ -152,8 +151,7 @@ void SBomber::CheckDestoyableObjects(Bomb * pBomb)
         if (vecDestoyableObjects[i]->isInside(x1, x2))
         {
             score += vecDestoyableObjects[i]->GetScore();
-            DeleteStaticObj DSO(vecDestoyableObjects[i], &vecStaticObj);
-            DSO.Execute();
+            CommandExecuter(new DeleteStaticObj (vecDestoyableObjects[i], &vecStaticObj));
         }
     }
 }
@@ -295,18 +293,12 @@ void SBomber::ProcessKBHit()
         break;
 
     case 'b':
-    {
-        DropBomb DB(FindPlane(), &vecDynamicObj, &bombsNumber, &score);
-        DB.Execute();
+        CommandExecuter(new DropBomb (FindPlane(), &vecDynamicObj, &bombsNumber, &score));
         break;
-    }
 
     case 'B': 
-    {
-        DropBomb DB(FindPlane(), &vecDynamicObj, &bombsNumber, &score);
-        DB.Execute();
+        CommandExecuter(new DropBomb (FindPlane(), &vecDynamicObj, &bombsNumber, &score));
         break; 
-    }
     
     default:
         break;
@@ -374,4 +366,11 @@ void DropBomb::Execute()
         *Bombs--;
         score -= Bomb::BombCost;
     }
+}
+
+
+void SBomber::CommandExecuter(ICommand* pCommand)
+{
+    pCommand->Execute();
+    pCommand->~ICommand();
 }
