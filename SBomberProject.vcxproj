@@ -142,6 +142,7 @@
     <ClCompile Include="Bomb.cpp" />
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="House.cpp" />
+    <ClCompile Include="ICommand.cpp" />
     <ClCompile Include="LevelGUI.cpp" />
     <ClCompile Include="MyTools.cpp" />
     <ClCompile Include="Plane.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="Ground.h" />
     <ClInclude Include="DestroyableGroundObject.h" />
     <ClInclude Include="House.h" />
+    <ClInclude Include="ICommand.h" />
     <ClInclude Include="LevelGUI.h" />
     <ClInclude Include="MyTools.h" />
     <ClInclude Include="Plane.h" />

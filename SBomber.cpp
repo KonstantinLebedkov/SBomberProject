@@ -155,27 +155,27 @@ void SBomber::CheckDestoyableObjects(Bomb * pBomb)
     }
 }
 
-void SBomber::DeleteDynamicObj(DynamicObject* pObj)
+void DeleteDynamicObj::Execute(DynamicObject* pObj, vector<DynamicObject*>* vecDynamicObj)
 {
-    auto it = vecDynamicObj.begin();
-    for (; it != vecDynamicObj.end(); it++)
+    auto it = vecDynamicObj->begin();
+    for (; it != vecDynamicObj->end(); it++)
     {
         if (*it == pObj)
         {
-            vecDynamicObj.erase(it);
+            vecDynamicObj->erase(it);
             break;
         }
     }
 }
 
-void SBomber::DeleteStaticObj(GameObject* pObj)
+void DeleteStaticObj::Execute(GameObject* pObj, vector<GameObject*>* vecStaticObj)
 {
-    auto it = vecStaticObj.begin();
-    for (; it != vecStaticObj.end(); it++)
+    auto it = vecStaticObj->begin();
+    for (; it != vecStaticObj->end(); it++)
     {
         if (*it == pObj)
         {
-            vecStaticObj.erase(it);
+            vecStaticObj->erase(it);
             break;
         }
     }
@@ -345,13 +345,13 @@ void SBomber::TimeFinish()
     FileLoggerSingletone::getInstance().WriteToLog(string(__FUNCTION__) + " deltaTime = ", (int)deltaTime);
 }
 
-void SBomber::DropBomb()
+void DropBomb::Execute(const Plane* pPlane, vector<DynamicObject*> *vecDynamicObj,  uint16_t *Bombs, int16_t *score)
 {
-    if (bombsNumber > 0)
+    if (*Bombs > 0)
     {
         FileLoggerSingletone::getInstance().WriteToLog(string(__FUNCTION__) + " was invoked");
 
-        Plane* pPlane = FindPlane();
+        //Plane* pPlane = FindPlane();
         double x = pPlane->GetX() + 4;
         double y = pPlane->GetY() + 2;
 
@@ -361,8 +361,8 @@ void SBomber::DropBomb()
         pBomb->SetPos(x, y);
         pBomb->SetWidth(SMALL_CRATER_SIZE);
 
-        vecDynamicObj.push_back(pBomb);
-        bombsNumber--;
+        vecDynamicObj->push_back(pBomb);
+        *Bombs--;
         score -= Bomb::BombCost;
     }
 }

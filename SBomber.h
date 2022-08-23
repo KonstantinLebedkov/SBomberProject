@@ -7,7 +7,11 @@
 #include "Bomb.h"
 #include "Ground.h"
 #include "Tank.h"
+#include "ICommand.h"
 
+class DropBomb :ICommand { public: void Execute(const Plane* pPlane, vector<DynamicObject*> *vecDynamicObj, uint16_t *Bombs, int16_t *score); };
+class DeleteDynamicObj :ICommand { public: void __fastcall Execute(DynamicObject* pObj, vector<DynamicObject*>* vecDynamicObj); };
+class DeleteStaticObj :ICommand { public: void __fastcall Execute(GameObject* pObj, vector<GameObject*>* vecStaticObj ); };
 class SBomber
 {
 public:
