@@ -9,9 +9,33 @@
 #include "Tank.h"
 #include "ICommand.h"
 
-class DropBomb :ICommand { public: void Execute(const Plane* pPlane, vector<DynamicObject*> *vecDynamicObj, uint16_t *Bombs, int16_t *score); };
-class DeleteDynamicObj :ICommand { public: void __fastcall Execute(DynamicObject* pObj, vector<DynamicObject*>* vecDynamicObj); };
-class DeleteStaticObj :ICommand { public: void __fastcall Execute(GameObject* pObj, vector<GameObject*>* vecStaticObj ); };
+class DropBomb :ICommand
+{
+    const Plane* pPlane;
+    vector<DynamicObject*>* vecDynamicObj;
+    uint16_t* Bombs;
+    int16_t* score;
+public: 
+    DropBomb(const Plane* pPlane, vector<DynamicObject*>* vecDynamicObj, uint16_t* Bombs, int16_t* score) :pPlane(pPlane), vecDynamicObj(vecDynamicObj), Bombs(Bombs),score(score) {};
+    void Execute();
+};
+class DeleteDynamicObj :ICommand 
+{
+    DynamicObject* pObj;
+    vector<DynamicObject*>* vecDynamicObj;
+public: 
+    __fastcall DeleteDynamicObj(DynamicObject* pObj,vector<DynamicObject*>* vecDynamicObj) :pObj(pObj),vecDynamicObj(vecDynamicObj) {};
+    void Execute(); 
+};
+class DeleteStaticObj :ICommand 
+{ 
+    GameObject* pObj;
+    vector<GameObject*>* vecStaticObj;
+public: 
+    __fastcall DeleteStaticObj(GameObject* pObj,vector<GameObject*>* vecStaticObj) :pObj(pObj),vecStaticObj(vecStaticObj) {};
+    void Execute(); 
+};
+
 class SBomber
 {
 public:
@@ -35,8 +59,8 @@ private:
     void CheckBombsAndGround();
     void __fastcall CheckDestoyableObjects(Bomb* pBomb);
 
-    void __fastcall DeleteDynamicObj(DynamicObject * pBomb);
-    void __fastcall DeleteStaticObj(GameObject* pObj);
+    //void __fastcall DeleteDynamicObj(DynamicObject * pBomb);
+    //void __fastcall DeleteStaticObj(GameObject* pObj);
 
     Ground * FindGround() const;
     Plane * FindPlane() const;
@@ -44,7 +68,7 @@ private:
     std::vector<DestroyableGroundObject*> FindDestoyableGroundObjects() const;
     std::vector<Bomb*> FindAllBombs() const;
 
-    void DropBomb();
+    //ICommand * DropBomb = new DropBomb(FindPlane(),&vecDynamicObj,&bombsNumber,&score);
 
     std::vector<DynamicObject*> vecDynamicObj;
     std::vector<GameObject*> vecStaticObj;
