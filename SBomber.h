@@ -12,27 +12,27 @@
 class DropBomb :ICommand
 {
     const Plane* pPlane;
-    vector<DynamicObject*>* vecDynamicObj;
+    std::vector<DynamicObject*>* vecDynamicObj;
     uint16_t* Bombs;
     int16_t* score;
 public: 
-    DropBomb(const Plane* pPlane, vector<DynamicObject*>* vecDynamicObj, uint16_t* Bombs, int16_t* score) :pPlane(pPlane), vecDynamicObj(vecDynamicObj), Bombs(Bombs),score(score) {};
+    DropBomb(const Plane* pPlane, std::vector<DynamicObject*>* vecDynamicObj, uint16_t* Bombs, int16_t* score) :pPlane(pPlane), vecDynamicObj(vecDynamicObj), Bombs(Bombs),score(score) {};
     void Execute();
 };
 class DeleteDynamicObj :ICommand 
 {
     DynamicObject* pObj;
-    vector<DynamicObject*>* vecDynamicObj;
+    std::vector<DynamicObject*>* vecDynamicObj;
 public: 
-    __fastcall DeleteDynamicObj(DynamicObject* pObj,vector<DynamicObject*>* vecDynamicObj) :pObj(pObj),vecDynamicObj(vecDynamicObj) {};
+    __fastcall DeleteDynamicObj(DynamicObject* pObj,std::vector<DynamicObject*>* vecDynamicObj) :pObj(pObj),vecDynamicObj(vecDynamicObj) {};
     void Execute(); 
 };
 class DeleteStaticObj :ICommand 
 { 
     GameObject* pObj;
-    vector<GameObject*>* vecStaticObj;
+    std::vector<GameObject*>* vecStaticObj;
 public: 
-    __fastcall DeleteStaticObj(GameObject* pObj,vector<GameObject*>* vecStaticObj) :pObj(pObj),vecStaticObj(vecStaticObj) {};
+    __fastcall DeleteStaticObj(GameObject* pObj,std::vector<GameObject*>* vecStaticObj) :pObj(pObj),vecStaticObj(vecStaticObj) {};
     void Execute(); 
 };
 

@@ -132,7 +132,9 @@ void SBomber::CheckBombsAndGround()
         {
             pGround->AddCrater(vecBombs[i]->GetX());
             CheckDestoyableObjects(vecBombs[i]);
-            DeleteDynamicObj(vecBombs[i]);
+            DeleteDynamicObj DDO (vecBombs[i],&vecDynamicObj);
+            DDO.Execute();
+            
         }
     }
 
@@ -150,7 +152,8 @@ void SBomber::CheckDestoyableObjects(Bomb * pBomb)
         if (vecDestoyableObjects[i]->isInside(x1, x2))
         {
             score += vecDestoyableObjects[i]->GetScore();
-            DeleteStaticObj(vecDestoyableObjects[i]);
+            DeleteStaticObj DSO(vecDestoyableObjects[i], &vecStaticObj);
+            DSO.Execute();
         }
     }
 }
@@ -292,13 +295,19 @@ void SBomber::ProcessKBHit()
         break;
 
     case 'b':
-        DropBomb();
+    {
+        DropBomb DB(FindPlane(), &vecDynamicObj, &bombsNumber, &score);
+        DB.Execute();
         break;
+    }
 
-    case 'B':
-        DropBomb();
-        break;
-
+    case 'B': 
+    {
+        DropBomb DB(FindPlane(), &vecDynamicObj, &bombsNumber, &score);
+        DB.Execute();
+        break; 
+    }
+    
     default:
         break;
     }
