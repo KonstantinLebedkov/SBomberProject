@@ -8,6 +8,7 @@
 #include "Ground.h"
 #include "Tank.h"
 #include "House.h"
+#include "BombDecorator.h"
 
 using namespace std;
 using namespace MyTools;
@@ -123,7 +124,7 @@ void SBomber::CheckPlaneAndLevelGUI()
 
 void SBomber::CheckBombsAndGround() 
 {
-    vector<Bomb*> vecBombs = FindAllBombs();
+    vector<DynamicObject*> vecBombs = FindAllBombs();
     Ground* pGround = FindGround();
     const double y = pGround->GetY();
     for (size_t i = 0; i < vecBombs.size(); i++)
@@ -131,7 +132,7 @@ void SBomber::CheckBombsAndGround()
         if (vecBombs[i]->GetY() >= y) // Пересечение бомбы с землей
         {
             pGround->AddCrater(vecBombs[i]->GetX());
-            CheckDestoyableObjects(vecBombs[i]);
+            CheckDestoyableObjects(dynamic_cast<Bomb*>(vecBombs[i]));
             DeleteDynamicObj(vecBombs[i]);
         }
     }
@@ -222,16 +223,16 @@ Ground* SBomber::FindGround() const
     return nullptr;
 }
 
-vector<Bomb*> SBomber::FindAllBombs() const
+vector<DynamicObject*> SBomber::FindAllBombs() const
 {
-    vector<Bomb*> vecBombs;
+    vector<DynamicObject*> vecBombs;
 
     for (size_t i = 0; i < vecDynamicObj.size(); i++)
     {
         Bomb* pBomb = dynamic_cast<Bomb*>(vecDynamicObj[i]);
         if (pBomb != nullptr)
         {
-            vecBombs.push_back(pBomb);
+            vecBombs.push_back(vecDynamicObj[i]);
         }
     }
 
@@ -296,7 +297,7 @@ void SBomber::ProcessKBHit()
         break;
 
     case 'B':
-        DropBomb();
+        DropHeavyBomb();
         break;
 
     default:
@@ -362,6 +363,29 @@ void SBomber::DropBomb()
         pBomb->SetWidth(SMALL_CRATER_SIZE);
 
         vecDynamicObj.push_back(pBomb);
+        bombsNumber--;
+        score -= Bomb::BombCost;
+    }
+}
+
+void SBomber::DropHeavyBomb()
+{
+    if (bombsNumber > 0)
+    {
+        FileLoggerSingletone::getInstance().WriteToLog(string(__FUNCTION__) + " was invoked");
+
+        Plane* pPlane = FindPlane();
+        double x = pPlane->GetX() + 4;
+        double y = pPlane->GetY() + 2;
+
+        BombDecorator* pBDecorator = new BombDecorator(new Bomb);
+
+        pBDecorator->SetDirection(0.3, 1);
+        pBDecorator->SetSpeed(2);
+        pBDecorator->SetPos(x, y);
+        pBDecorator->SetWidth(SMALL_CRATER_SIZE);
+
+        vecDynamicObj.push_back(pBDecorator);
         bombsNumber--;
         score -= Bomb::BombCost;
     }
