@@ -366,3 +366,57 @@ void SBomber::DropBomb()
         score -= Bomb::BombCost;
     }
 }
+
+
+
+SBomber::BombIterator& SBomber::BombIterator::operator++()
+{
+    curIndex++;
+
+    if (curIndex == -1)
+        curIndex = 0;
+
+    for (; curIndex < vecDynamicObj.size(); curIndex++)
+    {
+        Bomb* pBomb = dynamic_cast<Bomb*>(vecDynamicObj[curIndex]);
+        if (pBomb != nullptr)
+        {
+            ptr = &vecDynamicObj[curIndex];
+            break;
+        }
+    }
+    if (curIndex == vecDynamicObj.size())
+    {
+        curIndex = -1;
+        ptr = nullptr;
+    }
+    return *this;
+}
+
+SBomber::BombIterator& SBomber::BombIterator::operator--()
+{
+    curIndex--;
+
+    if (curIndex == -1)
+        curIndex = vecDynamicObj.size()-1;
+
+    for (; curIndex >-1 ; curIndex--)
+    {
+        Bomb* pBomb = dynamic_cast<Bomb*>(vecDynamicObj[curIndex]);
+        if (pBomb != nullptr)
+        {
+            ptr = &vecDynamicObj[curIndex];
+            break;
+        }
+    }
+    if (curIndex == -1)
+    {
+        ptr = nullptr;
+    }
+    return *this;
+}
+
+Bomb& SBomber::BombIterator::operator*()
+{
+    return dynamic_cast<Bomb*>(vecDynamicObj.at(curIndex));
+}
