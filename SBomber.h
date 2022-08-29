@@ -24,7 +24,22 @@ public:
     void DrawFrame();
     void MoveObjects();
     void CheckObjects();
-
+    class BombIterator
+    {
+        std::vector<DynamicObject*>& vecDynamicObj;
+        DynamicObject* ptr;
+    public:
+        int curIndex;
+        BombIterator(std::vector<DynamicObject*>& vecDynamicObj) :vecDynamicObj(vecDynamicObj), curIndex(-1), ptr(nullptr) { ++(*this); };
+        BombIterator& operator++ ();
+        BombIterator& operator-- ();
+        BombIterator& setEnd ();
+        Bomb* operator* ();
+        bool operator!= (BombIterator OtherBomb);
+        void reset() { curIndex = -1; ptr = nullptr; };
+    };
+    BombIterator begin();
+    BombIterator end();
 private:
 
     void CheckPlaneAndLevelGUI();

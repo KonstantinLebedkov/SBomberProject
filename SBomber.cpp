@@ -123,16 +123,16 @@ void SBomber::CheckPlaneAndLevelGUI()
 
 void SBomber::CheckBombsAndGround() 
 {
-    vector<Bomb*> vecBombs = FindAllBombs();
     Ground* pGround = FindGround();
     const double y = pGround->GetY();
-    for (size_t i = 0; i < vecBombs.size(); i++)
+    for (auto it :*this)
     {
-        if (vecBombs[i]->GetY() >= y) // Пересечение бомбы с землей
+        WriteToLog(string(__FUNCTION__) + " was invoked and found bomb at height " +to_string(it->GetY()));
+        if (it->GetY() >= y) // Пересечение бомбы с землей
         {
-            pGround->AddCrater(vecBombs[i]->GetX());
-            CheckDestoyableObjects(vecBombs[i]);
-            DeleteDynamicObj(vecBombs[i]);
+            pGround->AddCrater(it->GetX());
+            CheckDestoyableObjects(it);
+            DeleteDynamicObj(it);
         }
     }
 
@@ -140,6 +140,7 @@ void SBomber::CheckBombsAndGround()
 
 void SBomber::CheckDestoyableObjects(Bomb * pBomb)
 {
+    WriteToLog(string(__FUNCTION__) + " was invoked for bomb at coords " + to_string(pBomb->GetX()) + ":" + to_string(pBomb->GetY()));
     vector<DestroyableGroundObject*> vecDestoyableObjects = FindDestoyableGroundObjects();
     const double size = pBomb->GetWidth();
     const double size_2 = size / 2;
@@ -381,13 +382,12 @@ SBomber::BombIterator& SBomber::BombIterator::operator++()
         Bomb* pBomb = dynamic_cast<Bomb*>(vecDynamicObj[curIndex]);
         if (pBomb != nullptr)
         {
-            ptr = &vecDynamicObj[curIndex];
+            ptr = vecDynamicObj[curIndex];
             break;
         }
     }
     if (curIndex == vecDynamicObj.size())
     {
-        curIndex = -1;
         ptr = nullptr;
     }
     return *this;
@@ -397,7 +397,7 @@ SBomber::BombIterator& SBomber::BombIterator::operator--()
 {
     curIndex--;
 
-    if (curIndex == -1)
+    if (curIndex < 0)
         curIndex = vecDynamicObj.size()-1;
 
     for (; curIndex >-1 ; curIndex--)
@@ -405,18 +405,91 @@ SBomber::BombIterator& SBomber::BombIterator::operator--()
         Bomb* pBomb = dynamic_cast<Bomb*>(vecDynamicObj[curIndex]);
         if (pBomb != nullptr)
         {
-            ptr = &vecDynamicObj[curIndex];
+            ptr = vecDynamicObj[curIndex];
             break;
         }
     }
     if (curIndex == -1)
     {
+        curIndex = vecDynamicObj.size();
         ptr = nullptr;
     }
     return *this;
 }
 
-Bomb& SBomber::BombIterator::operator*()
+SBomber::BombIterator& SBomber::BombIterator::setEnd()
 {
-    return dynamic_cast<Bomb*>(vecDynamicObj.at(curIndex));
+    curIndex = vecDynamicObj.size();
+    ptr = nullptr;
+    return *this;
+}
+
+Bomb* SBomber::BombIterator::operator*()
+{
+    if (curIndex < vecDynamicObj.size())
+    {
+        Bomb* pBomb = dynamic_cast<Bomb*>(vecDynamicObj.at(curIndex));
+        if (pBomb != nullptr) return pBomb;
+        else
+        {
+            for (; curIndex < vecDynamicObj.size(); curIndex++)
+            {
+                Bomb* pBomb = dynamic_cast<Bomb*>(vecDynamicObj[curIndex]);
+                if (pBomb != nullptr)
+                {
+                    ptr = vecDynamicObj[curIndex];
+                    break;
+                }
+            }
+            if (curIndex == -1)
+            {
+                curIndex = vecDynamicObj.size();
+                ptr = nullptr;
+            }
+            return dynamic_cast<Bomb*>(ptr);
+        }
+    }
+    else
+    {
+        curIndex--;
+        for (; curIndex > -1; curIndex--)
+        {
+            Bomb* pBomb = dynamic_cast<Bomb*>(vecDynamicObj[curIndex]);
+            if (pBomb != nullptr)
+            {
+                ptr = vecDynamicObj[curIndex];
+                break;
+            }
+        }
+        if (curIndex == -1)
+        {
+            curIndex = vecDynamicObj.size();
+            ptr = nullptr;
+        }
+        return dynamic_cast<Bomb*>(ptr);
+    }
+}
+
+bool SBomber::BombIterator::operator!=(BombIterator OtherBomb)
+{
+    if ((this->curIndex == OtherBomb.curIndex )||(this->curIndex == this->vecDynamicObj.size()))
+        return false;
+    else 
+        return true;
+}
+
+SBomber::BombIterator SBomber::begin()
+{
+    SBomber::BombIterator it(vecDynamicObj);
+    WriteToLog(string(__FUNCTION__) + " was invoked, and returned " + to_string(int(it.curIndex)) + " address");
+    return SBomber::BombIterator(it);
+}
+
+SBomber::BombIterator SBomber::end()
+{
+    SBomber::BombIterator it(vecDynamicObj);
+    it.setEnd();
+    WriteToLog(string(__FUNCTION__) + " was invoked, and returned " + to_string(int(it.curIndex)) + " address");
+
+    return it;
 }
