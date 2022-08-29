@@ -8,6 +8,7 @@
 #include "Ground.h"
 #include "Tank.h"
 #include "House.h"
+#include "TankAdapter.h"
 
 using namespace std;
 using namespace MyTools;
@@ -53,10 +54,10 @@ SBomber::SBomber()
     pTank->SetPos(30, groundY - 1);
     vecStaticObj.push_back(pTank);
 
-    pTank = new Tank;
-    pTank->SetWidth(13);
-    pTank->SetPos(50, groundY - 1);
-    vecStaticObj.push_back(pTank);
+    TankAdapter* pTankA = new TankAdapter;
+    pTankA->SetWidth(13);
+    pTankA->SetPos(50, groundY - 1);
+    vecStaticObj.push_back(pTankA);
 
     House * pHouse = new House;
     pHouse->SetWidth(13);
@@ -186,6 +187,7 @@ vector<DestroyableGroundObject*> SBomber::FindDestoyableGroundObjects() const
     vector<DestroyableGroundObject*> vec;
     Tank* pTank;
     House* pHouse;
+    TankAdapter* pTankA;
     for (size_t i = 0; i < vecStaticObj.size(); i++)
     {
         pTank = dynamic_cast<Tank*>(vecStaticObj[i]);
@@ -199,6 +201,13 @@ vector<DestroyableGroundObject*> SBomber::FindDestoyableGroundObjects() const
         if (pHouse != nullptr)
         {
             vec.push_back(pHouse);
+            continue;
+        }
+
+        pTankA = dynamic_cast<TankAdapter*>(vecStaticObj[i]);
+        if (pTankA != nullptr)
+        {
+            vec.push_back(pTankA);
             continue;
         }
     }
